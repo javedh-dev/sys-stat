@@ -7,7 +7,7 @@ get_cpu_temp() {
     if [ -n "$thermal_zones" ]; then
         for zone in $thermal_zones; do
             local type=$(cat "$zone")
-            if [ "$type" == "x86_pkg_temp" ] || [ "$type" == "cpu_thermal" ]; then
+            if [ "$type" == "x86_pkg_temp" ] || [ "$type" == "cpu-thermal" ]; then
                 local temp=$(cat "${zone/\/type/\/temp}" 2>/dev/null)
                 if [ -n "$temp" ]; then
                     cpu_temp=$(echo "scale=2; $temp / 1000" | bc)
@@ -26,9 +26,9 @@ get_disk_temp() {
     for device in $disk_list; do
         local temp
         if [[ "$device" == *"nvme"* ]]; then
-            temp=$(smartctl -a "/dev/$device" 2>/dev/null | grep "Temperature Sensor 1:" | awk '{print $4}')
+            temp=$(smartctl -A "/dev/$device" 2>/dev/null | grep "Temperature Sensor 1:" | awk '{print $4}')
         else
-            temp=$(smartctl -a "/dev/$device" 2>/dev/null | grep "Temperature_Celsius" | awk '{print $10}')
+            temp=$(smartctl -A "/dev/$device" 2>/dev/null | grep "Temperature_Celsius" | awk '{print $10}')
         fi
         if [ -n "$temp" ]; then
             if [ -n "$temp_info" ]; then
@@ -47,10 +47,10 @@ generate_json_response() {
 
     local json="{"
     if [ -n "$cpu_temp" ]; then
-        json="$json \"cpu\": \"$cpu_temp\","
+        json="$json \"cpu\": \"$cpu_temp\""
     fi
     if [ -n "$disk_temp" ]; then
-        json="$json \"disk\": { $disk_temp }"
+        json=",$json \"disk\": { $disk_temp }"
     fi
     json="$json }"
 
