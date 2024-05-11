@@ -1,96 +1,100 @@
-- name: internet
-  points:
-    - measurement: speedtest
-      command: ["speedtest","-f","json"]
-      tags:
-        - key: host
-          value: ${HOST_NAME}
-      fields:
-        - key: download
-          value: ".download.bandwidth"
-        - key: upload
-          value: ".upload.bandwidth"
-        - key: "latency"
-          value: ".ping.latency"
-        - key: "jitter"
-          value: ".ping.jitter"
-- name: lan
-  points:
-    - measurement: lan
-      command: ["iperf3", "-c", "10.10.1.1", "--json"]
-      tags:
-        - key: source
-          value: ${HOST_NAME}
-        - key: target
-          value: storm
-      fields:
-        - key: upload
-          value: ".end.sum_sent.bits_per_second"
-        - key: download
-          value: ".end.sum_received.bits_per_second"
-    - measurement: lan
-      command: ["iperf3", "-c", "10.10.2.1", "--json"]
-      tags:
-        - key: source
-          value: ${HOST_NAME}
-        - key: target
-          value: nemo
-      fields:
-        - key: upload
-          value: ".end.sum_sent.bits_per_second"
-        - key: download
-          value: ".end.sum_received.bits_per_second"
-    - measurement: lan
-      command: ["iperf3", "-c", "10.10.3.1", "--json"]
-      tags:
-        - key: source
-          value: ${HOST_NAME}
-        - key: target
-          value: zoro
-      fields:
-        - key: upload
-          value: ".end.sum_sent.bits_per_second"
-        - key: download
-          value: ".end.sum_received.bits_per_second"
-    - measurement: lan
-      command: ["iperf3", "-c", "10.10.4.1", "--json"]
-      tags:
-        - key: source
-          value: ${HOST_NAME}
-        - key: target
-          value: omv
-      fields:
-        - key: upload
-          value: ".end.sum_sent.bits_per_second"
-        - key: download
-          value: ".end.sum_received.bits_per_second"
-    - measurement: lan
-      command: ["iperf3", "-c", "10.10.5.1", "--json"]
-      tags:
-        - key: source
-          value: ${HOST_NAME}
-        - key: target
-          value: goku
-      fields:
-        - key: upload
-          value: ".end.sum_sent.bits_per_second"
-        - key: download
-          value: ".end.sum_received.bits_per_second"
-- name: temperature
-  points:
-    - measurement: temperature
-      command: ["./fetch-temp"]
-      tags:
-        - key: source
-          value: ${HOST_NAME}
-      fields:
-        - key: cpu
-          value: ".cpu"
-        - key: disk-sda
-          value: ".disk.sda"
-        - key: disk-sdb
-          value: ".disk.sdb"
-        - key: disk-nvme0n1
-          value: ".disk.nvme0n1"
-
-
+influx:
+  url: "http://10.10.3.3:8086"
+  token: ${INFLUX_TOKEN}
+  org: "homelab"
+  bucket: "stats"
+stats:
+  - name: internet
+    points:
+      - measurement: speedtest
+        command: ["speedtest","-f","json"]
+        tags:
+          - key: host
+            value: ${HOST_NAME}
+        fields:
+          - key: download
+            value: ".download.bandwidth"
+          - key: upload
+            value: ".upload.bandwidth"
+          - key: "latency"
+            value: ".ping.latency"
+          - key: "jitter"
+            value: ".ping.jitter"
+  - name: lan
+    points:
+      - measurement: lan
+        command: ["iperf3", "-c", "10.10.1.1", "--json"]
+        tags:
+          - key: source
+            value: ${HOST_NAME}
+          - key: target
+            value: storm
+        fields:
+          - key: upload
+            value: ".end.sum_sent.bits_per_second"
+          - key: download
+            value: ".end.sum_received.bits_per_second"
+      - measurement: lan
+        command: ["iperf3", "-c", "10.10.2.1", "--json"]
+        tags:
+          - key: source
+            value: ${HOST_NAME}
+          - key: target
+            value: nemo
+        fields:
+          - key: upload
+            value: ".end.sum_sent.bits_per_second"
+          - key: download
+            value: ".end.sum_received.bits_per_second"
+      - measurement: lan
+        command: ["iperf3", "-c", "10.10.3.1", "--json"]
+        tags:
+          - key: source
+            value: ${HOST_NAME}
+          - key: target
+            value: zoro
+        fields:
+          - key: upload
+            value: ".end.sum_sent.bits_per_second"
+          - key: download
+            value: ".end.sum_received.bits_per_second"
+      - measurement: lan
+        command: ["iperf3", "-c", "10.10.4.1", "--json"]
+        tags:
+          - key: source
+            value: ${HOST_NAME}
+          - key: target
+            value: omv
+        fields:
+          - key: upload
+            value: ".end.sum_sent.bits_per_second"
+          - key: download
+            value: ".end.sum_received.bits_per_second"
+      - measurement: lan
+        command: ["iperf3", "-c", "10.10.5.1", "--json"]
+        tags:
+          - key: source
+            value: ${HOST_NAME}
+          - key: target
+            value: goku
+        fields:
+          - key: upload
+            value: ".end.sum_sent.bits_per_second"
+          - key: download
+            value: ".end.sum_received.bits_per_second"
+  - name: temperature
+    points:
+      - measurement: temperature
+        command: ["./fetch-temp"]
+        tags:
+          - key: source
+            value: ${HOST_NAME}
+        fields:
+          - key: cpu
+            value: ".cpu"
+          - key: disk-sda
+            value: ".disk.sda"
+          - key: disk-sdb
+            value: ".disk.sdb"
+          - key: disk-nvme0n1
+            value: ".disk.nvme0n1"

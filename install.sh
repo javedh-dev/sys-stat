@@ -78,8 +78,9 @@ After=network.target
 [Service]
 Type=simple
 ExecStart=/usr/share/sys-stats/.venv/bin/python /usr/local/bin/sys-stats.py
-EnvironmentFile=/etc/environment
+EnvironmentFile=/usr/share/sys-stats/.env
 WorkingDirectory=/usr/share/sys-stats
+User=root
 
 [Install]
 WantedBy=multi-user.target
@@ -96,6 +97,8 @@ copy_config_file() {
     step_message "Copying config.yml..."
     mkdir -p /usr/share/sys-stats/
     cp config.yml /usr/share/sys-stats/
+    step_message "Copying env file..."
+    cp env.txt /usr/share/sys-stats/.env
     if [ $? -eq 0 ]; then
         success_message "Config file copied."
     else
@@ -112,9 +115,9 @@ copy_binaries() {
     if [ $? -eq 0 ]; then
         chmod +x /usr/local/bin/fetch-temp
         chmod +x /usr/local/bin/sys-stats.py
-        success_message "fetch-temp copied and made executable successfully."
+        success_message "fetch-temp and app.py copied and made executable successfully."
     else
-        failure_message "Failed to copy fetch-temp file."
+        failure_message "Failed to copy fetch-temp or app.py file."
     fi
 }
 
