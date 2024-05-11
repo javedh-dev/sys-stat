@@ -99,5 +99,6 @@ if __name__=="__main__":
     read_config()
     # response = execute()
     # logger.info(json.dumps(response, indent=2))
+    logger.info("Started server on - http://0.0.0.0:2543")
     serve(app, port=2543)
 
