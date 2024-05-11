@@ -85,7 +85,7 @@ stats:
   - name: temperature
     points:
       - measurement: temperature
-        command: ["./fetch-temp"]
+        command: ["fetch-temp"]
         tags:
           - key: source
             value: ${HOST_NAME}
