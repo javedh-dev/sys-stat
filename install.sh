@@ -47,7 +47,7 @@ install_speedtest() {
     tar -xvf speedtest.tgz
     if [ $? -eq 0 ]; then
         chmod +x speedtest
-        sudo mv speedtest /usr/local/bin/
+        mv speedtest /usr/local/bin/
         success_message "Speedtest installed successfully."
     else
         failure_message "Failed to download Speedtest."
@@ -58,8 +58,8 @@ install_speedtest() {
 # Install required packages non-interactively
 install_packages() {
     step_message "Installing required packages..."
-    sudo apt-get update
-    sudo apt-get install -y jq python3 python3-venv iperf3
+    apt-get update
+    DEBIAN_FRONTEND=noninteractive apt-get install -y jq python3 python3-venv iperf3
     if [ $? -eq 0 ]; then
         success_message "Required packages installed."
     else
@@ -70,7 +70,7 @@ install_packages() {
 # Create a service called sys-stats
 create_sys_stats_service() {
     step_message "Creating sys-stats service..."
-    sudo cat <<EOF > /etc/systemd/system/sys-stats.service
+    cat <<EOF > /etc/systemd/system/sys-stats.service
 [Unit]
 Description=System Statistics Service
 After=network.target
@@ -94,7 +94,7 @@ EOF
 # Copy config.yml to /usr/share/sys-stats
 copy_config_file() {
     step_message "Copying config.yml..."
-    sudo cp config.yml /usr/share/sys-stats/
+    cp config.yml /usr/share/sys-stats/
     if [ $? -eq 0 ]; then
         success_message "Config file copied."
     else
@@ -102,11 +102,23 @@ copy_config_file() {
     fi
 }
 
+# Copy fetch-temp file to /usr/local/bin and make it executable
+copy_fetch_temp() {
+    step_message "Copying fetch-temp file to /usr/local/bin and making it executable..."
+    cp fetch-temp /usr/local/bin/
+    if [ $? -eq 0 ]; then
+        chmod +x /usr/local/bin/fetch-temp
+        success_message "fetch-temp copied and made executable successfully."
+    else
+        failure_message "Failed to copy fetch-temp file."
+    fi
+}
+
 # Create Python virtual environment and install requirements
 setup_virtual_environment() {
     step_message "Setting up virtual environment and installing requirements..."
-    sudo mkdir -p /usr/share/sys-stats/.venv
-    sudo python3 -m venv /usr/share/sys-stats/.venv
+    mkdir -p /usr/share/sys-stats/.venv
+    python3 -m venv /usr/share/sys-stats/.venv
     source /usr/share/sys-stats/.venv/bin/activate
     pip install -r requirements.txt
     if [ $? -eq 0 ]; then
@@ -119,8 +131,8 @@ setup_virtual_environment() {
 # Enable and start the service
 enable_and_start_service() {
     step_message "Enabling and starting the service..."
-    sudo systemctl enable sys-stats
-    sudo systemctl start sys-stats
+    systemctl enable sys-stats
+    systemctl start sys-stats
     if [ $? -eq 0 ]; then
         success_message "Service enabled and started."
     else
@@ -129,13 +141,13 @@ enable_and_start_service() {
 }
 
 # Clone repository into a temporary directory and delete it at the end
-clone_and_cleanup() {
+main() {
     step_message "Cloning repository into temporary directory..."
     temp_dir=$(mktemp -d)
-    git clone https://github.com/your_username/your_repository.git "$temp_dir"
+    git clone https://github.com/javedh-dev/sys-stat.git "$temp_dir"
     if [ $? -eq 0 ]; then
         cd "$temp_dir"
-        main
+        install
         cd ..
         rm -rf "$temp_dir"
         success_message "Repository cloned and cleaned up."
@@ -147,7 +159,7 @@ clone_and_cleanup() {
 # Uninstall Speedtest
 uninstall_speedtest() {
     step_message "Uninstalling Speedtest..."
-    sudo rm /usr/local/bin/speedtest
+    rm /usr/local/bin/speedtest
     if [ $? -eq 0 ]; then
         success_message "Speedtest uninstalled successfully."
     else
@@ -158,7 +170,7 @@ uninstall_speedtest() {
 # Uninstall required packages
 uninstall_packages() {
     step_message "Uninstalling required packages..."
-    sudo apt-get purge -y jq python3 python3-venv iperf3
+    apt-get purge -y jq python3 python3-venv iperf3
     if [ $? -eq 0 ]; then
         success_message "Required packages uninstalled."
     else
@@ -169,8 +181,8 @@ uninstall_packages() {
 # Disable and stop the service
 disable_and_stop_service() {
     step_message "Disabling and stopping the service..."
-    sudo systemctl stop sys-stats
-    sudo systemctl disable sys-stats
+    systemctl stop sys-stats
+    systemctl disable sys-stats
     if [ $? -eq 0 ]; then
         success_message "Service disabled and stopped."
     else
@@ -181,7 +193,7 @@ disable_and_stop_service() {
 # Remove sys-stats service
 remove_sys_stats_service() {
     step_message "Removing sys-stats service..."
-    sudo rm /etc/systemd/system/sys-stats.service
+    rm /etc/systemd/system/sys-stats.service
     if [ $? -eq 0 ]; then
         success_message "Sys-stats service removed."
     else
@@ -192,7 +204,7 @@ remove_sys_stats_service() {
 # Remove sys-stats directory
 remove_sys_stats_directory() {
     step_message "Removing sys-stats directory..."
-    sudo rm -rf /usr/share/sys-stats
+    rm -rf /usr/share/sys-stats
     if [ $? -eq 0 ]; then
         success_message "Sys-stats directory removed."
     else
@@ -203,7 +215,7 @@ remove_sys_stats_directory() {
 # Uninstall Python virtual environment
 uninstall_virtual_environment() {
     step_message "Uninstalling virtual environment..."
-    sudo rm -rf /usr/share/sys-stats/.venv
+    rm -rf /usr/share/sys-stats/.venv
     if [ $? -eq 0 ]; then
         success_message "Virtual environment uninstalled."
     else
@@ -222,7 +234,7 @@ uninstall() {
 }
 
 # Main function to execute all steps
-main() {
+install() {
     check_debian
     install_speedtest
     install_packages
