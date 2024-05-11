@@ -96,9 +96,9 @@ EOF
 copy_config_file() {
     step_message "Copying config.yml..."
     mkdir -p /usr/share/sys-stats/
-    cp config.yml /usr/share/sys-stats/
+    cp -n config.yml /usr/share/sys-stats/
     step_message "Copying env file..."
-    cp env.txt /usr/share/sys-stats/.env
+    cp -n env.txt /usr/share/sys-stats/.env
     if [ $? -eq 0 ]; then
         success_message "Config file copied."
     else
@@ -193,9 +193,9 @@ remove_sys_stats_service() {
 }
 
 # Remove sys-stats directory
-remove_sys_stats_directory() {
+clear_sys_stats_directory() {
     step_message "Removing sys-stats directory..."
-    rm -rf /usr/share/sys-stats
+    rm -rf /usr/share/sys-stats/.venv
     if [ $? -eq 0 ]; then
         success_message "Sys-stats directory removed."
     else

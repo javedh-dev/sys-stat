@@ -91,10 +91,10 @@ stats:
             value: ${HOST_NAME}
         fields:
           - key: cpu
-            value: ".cpu"
+            value: ".cpu|tonumber"
           - key: disk-sda
-            value: ".disk.sda"
+            value: ".disk.sda|tonumber"
           - key: disk-sdb
-            value: ".disk.sdb"
+            value: ".disk.sdb|tonumber"
           - key: disk-nvme0n1
-            value: ".disk.nvme0n1"
+            value: ".disk.nvme0n1|tonumber"
