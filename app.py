@@ -76,7 +76,7 @@ def process_fields(point, response):
     fields = {}
     for field in point["fields"]:
         val = jq.compile(field["value"]).input_value(response).text()
-        val = float(val) if val != "null" else 0
+        val = float(val) if val != "null" else 0.0
         fields[field["key"]] = val
     return fields
 
