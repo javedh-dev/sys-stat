@@ -104,8 +104,10 @@ copy_config_file() {
 }
 
 # Copy fetch-temp file to /usr/local/bin and make it executable
-copy_fetch_temp() {
-    step_message "Copying fetch-temp file to /usr/local/bin and making it executable..."
+copy_binaries() {
+    step_message "Copying fetch-temp and app.py file to /usr/local/bin and making it executable..."
+    
+    cp app.py /usr/local/bin/sys-stats.py
     cp fetch-temp /usr/local/bin/
     if [ $? -eq 0 ]; then
         chmod +x /usr/local/bin/fetch-temp
@@ -239,8 +241,9 @@ install() {
     check_debian
     install_speedtest
     install_packages
-    create_sys_stats_service
     copy_config_file
+    copy_binaries
+    create_sys_stats_service
     setup_virtual_environment
     enable_and_start_service
 }
