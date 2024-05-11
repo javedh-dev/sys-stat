@@ -94,6 +94,7 @@ EOF
 # Copy config.yml to /usr/share/sys-stats
 copy_config_file() {
     step_message "Copying config.yml..."
+    mkdir -p /usr/share/sys-stats/
     cp config.yml /usr/share/sys-stats/
     if [ $? -eq 0 ]; then
         success_message "Config file copied."
