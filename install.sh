@@ -137,13 +137,13 @@ setup_virtual_environment() {
 
 # Enable and start the service
 enable_and_start_service() {
-    step_message "Enabling and starting the service..."
-    systemctl enable sys-stats
-    systemctl start sys-stats
+    step_message "Enabling and starting the services..."
+    systemctl enable sys-stats iperf3
+    systemctl start sys-stats iperf3
     if [ $? -eq 0 ]; then
-        success_message "Service enabled and started."
+        success_message "Services enabled and started."
     else
-        failure_message "Failed to enable and start the service."
+        failure_message "Failed to enable and start the services."
     fi
 }
 
