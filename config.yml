@@ -6,8 +6,8 @@ influx:
 stats:
   - name: internet
     points:
-      - measurement: speedtest
-        command: ["speedtest","-f","json"]
+      - measurement: internet
+        command: ["speedtest","-f","json", "--accept-license"]
         tags:
           - key: host
             value: ${HOST_NAME}

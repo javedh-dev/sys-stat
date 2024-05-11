@@ -43,7 +43,19 @@ check_debian() {
 # Download and install speedtest from Ookla and add it to the path
 install_speedtest() {
     step_message "Downloading and installing Speedtest..."
-    wget -O speedtest.tgz https://install.speedtest.net/app/cli/ookla-speedtest-1.2.0-linux-x86_64.tgz
+
+    ARCHITECTURE=$(uname -m)
+
+    if [ "$ARCHITECTURE" = "x86_64" ]; then
+        DOWNLOAD_URL="https://install.speedtest.net/app/cli/ookla-speedtest-1.2.0-linux-x86_64.tgz"
+    elif [ "$ARCHITECTURE" = "armv7l" ]; then
+        DOWNLOAD_URL="https://install.speedtest.net/app/cli/ookla-speedtest-1.2.0-linux-armhf.tgz"
+    else
+        failure_message "Unsupported architecture: $ARCHITECTURE"
+        return 1
+    fi
+
+    wget -O speedtest.tgz $DOWNLOAD_URL
     tar -xvf speedtest.tgz
     if [ $? -eq 0 ]; then
         chmod +x speedtest
