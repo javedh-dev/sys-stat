@@ -111,6 +111,7 @@ copy_binaries() {
     cp fetch-temp /usr/local/bin/
     if [ $? -eq 0 ]; then
         chmod +x /usr/local/bin/fetch-temp
+        chmod +x /usr/local/bin/sys-stats.py
         success_message "fetch-temp copied and made executable successfully."
     else
         failure_message "Failed to copy fetch-temp file."
@@ -140,22 +141,6 @@ enable_and_start_service() {
         success_message "Service enabled and started."
     else
         failure_message "Failed to enable and start the service."
-    fi
-}
-
-# Clone repository into a temporary directory and delete it at the end
-main() {
-    step_message "Cloning repository into temporary directory..."
-    temp_dir=$(mktemp -d)
-    git clone https://github.com/javedh-dev/sys-stat.git "$temp_dir"
-    if [ $? -eq 0 ]; then
-        cd "$temp_dir"
-        install
-        cd ..
-        rm -rf "$temp_dir"
-        success_message "Repository cloned and cleaned up."
-    else
-        failure_message "Failed to clone repository."
     fi
 }
 
@@ -246,6 +231,23 @@ install() {
     create_sys_stats_service
     setup_virtual_environment
     enable_and_start_service
+}
+
+
+# Clone repository into a temporary directory and delete it at the end
+main() {
+    step_message "Cloning repository into temporary directory..."
+    temp_dir=$(mktemp -d)
+    git clone https://github.com/javedh-dev/sys-stat.git "$temp_dir"
+    if [ $? -eq 0 ]; then
+        cd "$temp_dir"
+        install
+        cd ..
+        rm -rf "$temp_dir"
+        success_message "Repository cloned and cleaned up."
+    else
+        failure_message "Failed to clone repository."
+    fi
 }
 
 
