@@ -161,7 +161,7 @@ uninstall_speedtest() {
 # Uninstall required packages
 uninstall_packages() {
     step_message "Uninstalling required packages..."
-    apt-get purge -y jq python3 python3-venv iperf3
+    apt-get purge -y jq python3-venv iperf3
     if [ $? -eq 0 ]; then
         success_message "Required packages uninstalled."
     else
