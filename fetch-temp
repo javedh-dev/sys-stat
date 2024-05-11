@@ -7,7 +7,7 @@ get_cpu_temp() {
     if [ -n "$thermal_zones" ]; then
         for zone in $thermal_zones; do
             local type=$(cat "$zone")
-            if [ "$type" == "x86_pkg_temp" ]; then
+            if [ "$type" == "x86_pkg_temp" ] || [ "$type" == "cpu_thermal" ]; then
                 local temp=$(cat "${zone/\/type/\/temp}" 2>/dev/null)
                 if [ -n "$temp" ]; then
                     cpu_temp=$(echo "scale=2; $temp / 1000" | bc)
