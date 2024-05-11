@@ -1,0 +1,7 @@
+influxdb-client
+pyyaml
+schema
+flask
+waitress
+jq
+# influxdb
