@@ -229,7 +229,7 @@ uninstall_virtual_environment() {
 # Main function to execute all uninstallation steps
 uninstall() {
     uninstall_speedtest
-    uninstall_packages
+    # uninstall_packages
     disable_and_stop_service
     remove_sys_stats_service
     remove_sys_stats_directory
