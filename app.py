@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from influxdb_client.client.write_api import SYNCHRONOUS
-from flask import Flask
+from flask import Flask, request
 from waitress import serve
 import yaml
 import subprocess
@@ -84,10 +84,14 @@ def process_fields(point, response):
 def execute():
     logger.info("-"*100)
     response = {}
+    stats_to_process = [] if not request.args.get("stats") else request.args.get("stats").split(",")
     for stat in config["stats"]:
-        logger.info("Processing stat for : " + stat["name"])
-        point_res = process_point(stat)
-        response[stat["name"]] = point_res
+        if stat["name"] in stats_to_process or len(stats_to_process)==0:
+            logger.info("Processing stat for : " + stat["name"])
+            point_res = process_point(stat)
+            response[stat["name"]] = point_res
+        else:
+            logger.info("Skipping to process - "+stat["name"])
     logger.info("-"*100)
     return response
 
