@@ -50,7 +50,7 @@ generate_json_response() {
         json="$json \"cpu\": \"$cpu_temp\""
     fi
     if [ -n "$disk_temp" ]; then
-        json=",$json \"disk\": { $disk_temp }"
+        json="$json, \"disk\": { $disk_temp }"
     fi
     json="$json }"
 
